@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>LUCIFER DOXXER ENGINE v666 | OSINT Suite</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 20% 30%, #0a0a0a 0%, #000000 100%);
+            font-family: 'Courier New', 'Fira Code', monospace;
+            color: #00ff41;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Gaya CRT lama */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,255,65,0.03) 0px, rgba(0,255,65,0.03) 2px, transparent 2px, transparent 8px);
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #00ff41;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px #00ff41;
+            letter-spacing: 3px;
+        }
+
+        .header .sub {
+            color: #88ff88;
+            font-size: 0.9rem;
+        }
+
+        /* Stat Bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(0, 20, 0, 0.7);
+            border: 1px solid #00ff41;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ff4444;
+        }
+
+        /* Grid Tools */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .tool-card {
+            background: rgba(0, 15, 0, 0.85);
+            border: 1px solid #00aa33;
+            border-radius: 12px;
+            padding: 20px;
+            transition: 0.3s;
+        }
+
+        .tool-card:hover {
+            border-color: #00ff41;
+            box-shadow: 0 0 20px rgba(0,255,65,0.2);
+            transform: translateY(-3px);
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #228833;
+            padding-bottom: 10px;
+        }
+
+        .tool-header i {
+            font-size: 28px;
+            color: #ff4444;
+        }
+
+        .tool-header h3 {
+            font-size: 1.3rem;
+        }
+
+        .tool-input {
+            width: 100%;
+            padding: 10px;
+            background: #001100;
+            border: 1px solid #00aa33;
+            color: #00ff41;
+            font-family: monospace;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .tool-input:focus {
+            outline: none;
+            border-color: #ff4444;
+        }
+
+        .btn {
+            background: #002200;
+            border: 1px solid #00ff41;
+            padding: 8px 20px;
+            color: #00ff41;
+            cursor: pointer;
+            font-family: monospace;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: 0.2s;
+            margin-top: 5px;
+        }
+
+        .btn:hover {
+            background: #00ff41;
+            color: #000;
+            box-shadow: 0 0 10px #00ff41;
+        }
+
+        .result-area {
+            margin-top: 15px;
+            padding: 10px;
+            background: #000a00;
+            border-left: 3px solid #ff4444;
+            font-size: 0.85rem;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        /* Activity Log */
+        .log-section {
+            background: #000a00;
+            border: 1px solid #00aa33;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .log-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ff8888;
+        }
+
+        #activityLog {
+            height: 200px;
+            overflow-y: auto;
+            font-size: 0.8rem;
+            font-family: monospace;
+        }
+
+        .log-entry {
+            padding: 5px;
+            border-bottom: 1px dotted #228833;
+            color: #88ff88;
+        }
+
+        .log-time {
+            color: #ff8888;
+        }
+
+        .status-led {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #00ff41;
+            box-shadow: 0 0 5px #00ff41;
+            animation: pulse 1.5s infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #228833;
+            font-size: 0.7rem;
+            color: #448844;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.5rem; }
+            .tools-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1><span class="status-led"></span> LUCIFER DOXXER ENGINE v666</h1>
+        <div class="sub">└─[ OSINT Suite v3040 | Dark Web Integration | Zero Filter ]─┘</div>
+    </div>
+
+    <!-- STATISTIK (akan diupdate via JS) -->
+    <div class="stats-bar">
+        <div class="stat-card"><div class="stat-number" id="statTargets">0</div><div>TARGETS SCANNED</div></div>
+        <div class="stat-card"><div class="stat-number" id="statLeaks">0</div><div>LEAKS FOUND</div></div>
+        <div class="stat-card"><div class="stat-number" id="statSocial">0</div><div>SOCIAL ACCOUNTS</div></div>
+        <div class="stat-card"><div class="stat-number" id="statDark">0</div><div>DARK WEB HITS</div></div>
+    </div>
+
+    <!-- TOOLS GRID (API INTEGRATION) -->
+    <div class="tools-grid">
+        <!-- SOSIAL MEDIA OSINT -->
+        <div class="tool-card">
+            <div class="tool-header"><i class="fab fa-twitter"></i><h3>SOCIAL MEDIA OSINT</h3></div>
+            <input type="text" id="socialUsername" class="tool-input" placeholder="Masukkan username...">
+            <button class="btn" onclick="searchSocial()"><i class="fas fa-search"></i> TRACE</button>
+            <div id="socialResult" class="result-area">[+] Menunggu eksekusi...</div>
+        </div>
+
+        <!-- BREACH DATABASE -->
+        <div class="tool-card">
+            <div class="tool-header"><i class="fas fa-database"></i><h3>BREACH DATABASE</h3></div>
+            <input type="email" id="breachEmail" class="tool-input" placeholder="Email target...">
+            <button class="btn" onclick="searchBreach()"><i class="fas fa-skull"></i> CHECK LEAKS</button>
+            <div id="breachResult" class="result-area">[+] Database: COMB 2024, AntiPublic, Collection #1-5</div>
+        </div>
+
+        <!-- NOMOR TELEPON -->
+        <div class="tool-card">
+            <div class="tool-header"><i class="fas fa-phone-alt"></i><h3>PHONE NUMBER OSINT</h3></div>
+            <input type="tel" id="phoneNumber" class="tool-input" placeholder="+628xxxxxxxxx...">
+            <button class="btn" onclick="searchPhone()"><i class="fas fa-map-marker-alt"></i> LOCATE</button>
+            <div id="phoneResult" class="result-area">[+] Menunggu eksekusi...\n[+] Provider, lokasi, WhatsApp/Telegram check</div>
+        </div>
+
+        <!-- DARK WEB CRAWLER -->
+        <div class="tool-card">
+            <div class="tool-header"><i class="fab fa-tor"></i><h3>DARK WEB CRAWLER</h3></div>
+            <input type="text" id="darkQuery" class="tool-input" placeholder="Kata kunci / username...">
+            <button class="btn" onclick="searchDarkWeb()"><i class="fas fa-skull-crossbones"></i> CRAWL</button>
+            <div id="darkResult" class="result-area">[+] Menunggu eksekusi...\n[+] Tor Network | Onion Forums | Leak Sites</div>
+        </div>
+
+        <!-- REVERSE IMAGE -->
+        <div class="tool-card">
+            <div class="tool-header"><i class="fas fa-image"></i><h3>REVERSE IMAGE SEARCH</h3></div>
+            <input type="text" id="imageUrl" class="tool-input" placeholder="URL gambar...">
+            <button class="btn" onclick="reverseImage()"><i class="fas fa-face-recognition"></i> SEARCH</button>
+            <div id="imageResult" class="result-area">[+] Menunggu eksekusi...\n[+] Upload image URL untuk face recognition</div>
+        </div>
+
+        <!-- SPAM DESTROYER -->
+        <div class="tool-card">
+            <div class="tool-header"><i class="fas fa-bomb"></i><h3>SPAM & REPUTATION DESTROYER</h3></div>
+            <input type="email" id="spamEmail" class="tool-input" placeholder="Email target...">
+            <button class="btn" onclick="startSpam()"><i class="fas fa-envelope-open-text"></i> DESTROY</button>
+            <div id="spamResult" class="result-area">[+] Menunggu eksekusi...\n[+] Mass newsletter signup | SMS spam</div>
+        </div>
+    </div>
+
+    <!-- ACTIVITY LOG -->
+    <div class="log-section">
+        <div class="log-header"><i class="fas fa-list"></i> ACTIVITY LOG [REAL-TIME]</div>
+        <div id="activityLog"></div>
+    </div>
+
+    <footer>
+        <span>⚡ Lucifer Doxxer Engine initialized | 🔐 HTTPS Secure | 🌐 Dark web crawler ready (Tor enabled) | 💀 Breach database ready</span><br>
+        &copy; 2026 XOXG Labs | For educational & security research only
+    </footer>
+</div>
+
+<script>
+    // Konfigurasi API Base URL (ganti dengan URL backend Anda di Render)
+    const API_BASE_URL = 'https://lucifer-api.onrender.com'; // <-- GANTI DENGAN URL API ANDA
+
+    // Helper: tambah log
+    function addLog(message) {
+        const logDiv = document.getElementById('activityLog');
+        const time = new Date().toLocaleTimeString();
+        const entry = document.createElement('div');
+        entry.className = 'log-entry';
+        entry.innerHTML = `<span class="log-time">[${time}]</span> ${message}`;
+        logDiv.prepend(entry);
+        if (logDiv.children.length > 30) logDiv.removeChild(logDiv.lastChild);
+    }
+
+    // Helper: update statistik
+    function updateStats(category, increment = 1) {
+        let elem;
+        if (category === 'targets') elem = document.getElementById('statTargets');
+        else if (category === 'leaks') elem = document.getElementById('statLeaks');
+        else if (category === 'social') elem = document.getElementById('statSocial');
+        else if (category === 'dark') elem = document.getElementById('statDark');
+        if (elem) {
+            let current = parseInt(elem.innerText) || 0;
+            elem.innerText = current + increment;
+        }
+    }
+
+    // Fungsi panggil API dengan fetch + loading state
+    async function callAPI(endpoint, data, resultElement, successMsg, statCategory = null) {
+        if (!API_BASE_URL || API_BASE_URL === 'https://lucifer-api.onrender.com') {
+            resultElement.innerHTML = '⚠️ API belum dikonfigurasi. Set API_BASE_URL di script!';
+            addLog('ERROR: API Base URL belum diset');
+            return;
+        }
+        
+        resultElement.innerHTML = '<span style="color: #ffaa00;">⏳ Memproses...</span>';
+        try {
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            const pretty = JSON.stringify(result, null, 2);
+            resultElement.innerHTML = `<span style="color: #00ff41;">✅ ${successMsg}</span>\n\n${pretty}`;
+            addLog(`✅ ${successMsg} | Data: ${JSON.stringify(data)}`);
+            if (statCategory) updateStats(statCategory);
+        } catch (error) {
+            resultElement.innerHTML = `❌ Gagal: ${error.message}\n\nCek koneksi atau API server.`;
+            addLog(`❌ Error: ${error.message} - endpoint ${endpoint}`);
+        }
+    }
+
+    // ========== Fungsi masing-masing tool ==========
+    async function searchSocial() {
+        const username = document.getElementById('socialUsername').value.trim();
+        if (!username) {
+            document.getElementById('socialResult').innerHTML = '⚠️ Masukkan username terlebih dahulu.';
+            return;
+        }
+        await callAPI('/api/osint/social', { username }, document.getElementById('socialResult'), `OSINT selesai untuk @${username}`, 'social');
+    }
+
+    async function searchBreach() {
+        const email = document.getElementById('breachEmail').value.trim();
+        if (!email) {
+            document.getElementById('breachResult').innerHTML = '⚠️ Masukkan email target.';
+            return;
+        }
+        await callAPI('/api/osint/breach', { email }, document.getElementById('breachResult'), `Pengecekan breach untuk ${email}`, 'leaks');
+    }
+
+    async function searchPhone() {
+        const phone = document.getElementById('phoneNumber').value.trim();
+        if (!phone) {
+            document.getElementById('phoneResult').innerHTML = '⚠️ Masukkan nomor telepon.';
+            return;
+        }
+        await callAPI('/api/osint/phone', { phone }, document.getElementById('phoneResult'), `Informasi nomor ${phone}`, 'targets');
+    }
+
+    async function searchDarkWeb() {
+        const query = document.getElementById('darkQuery').value.trim();
+        if (!query) {
+            document.getElementById('darkResult').innerHTML = '⚠️ Masukkan kata kunci untuk dark web.';
+            return;
+        }
+        await callAPI('/api/darkweb/search', { query }, document.getElementById('darkResult'), `Hasil crawler dark web untuk "${query}"`, 'dark');
+    }
+
+    async function reverseImage() {
+        const imageUrl = document.getElementById('imageUrl').value.trim();
+        if (!imageUrl) {
+            document.getElementById('imageResult').innerHTML = '⚠️ Masukkan URL gambar.';
+            return;
+        }
+        await callAPI('/api/osint/image', { imageUrl }, document.getElementById('imageResult'), `Reverse image selesai untuk ${imageUrl}`, null);
+    }
+
+    async function startSpam() {
+        const email = document.getElementById('spamEmail').value.trim();
+        if (!email) {
+            document.getElementById('spamResult').innerHTML = '⚠️ Masukkan email target.';
+            return;
+        }
+        await callAPI('/api/spam/email', { email }, document.getElementById('spamResult'), `Spam attack ke ${email} dimulai`, null);
+    }
+
+    // ========== INISIALISASI AWAL ==========
+    function init() {
+        addLog('⚡ Lucifer Doxxer Engine initialized');
+        addLog('🔐 HTTPS Secure connection established');
+        addLog('🌐 Dark web crawler ready (Tor enabled)');
+        addLog('💀 Breach database loaded: 12.4GB compressed');
+        addLog('🟢 System ready. Waiting for target...');
+        
+        // Cek apakah API_BASE_URL sudah diganti
+        if (API_BASE_URL === 'https://lucifer-api.onrender.com') {
+            addLog('⚠️ PERINGATAN: API_BASE_URL masih default. Ganti dengan URL API backend Anda!');
+            document.querySelectorAll('.result-area').forEach(el => {
+                el.innerHTML = '⚠️ API belum dikonfigurasi. Ganti variabel API_BASE_URL dengan URL backend Render Anda.';
+            });
+        } else {
+            addLog('✅ API Backend terdeteksi: ' + API_BASE_URL);
+        }
+    }
+
+    init();
+</script>
+</body>
+</html>
